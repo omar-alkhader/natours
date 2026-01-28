@@ -4,18 +4,13 @@ const stripe = Stripe(
 );
 export const bookTour = async (tourId) => {
   try {
-    const res = await fetch(
-      `http://127.0.0.1:5500/api/v1/bookings/checkout-session/${tourId}`,
-    );
+    const res = await fetch(`/api/v1/bookings/checkout-session/${tourId}`);
     const data = await res.json();
     if (!res.ok) {
       throw data;
     }
-    console.log(data.session.id);
-    console.log(stripe.redirectToCheckout);
     window.location.href = data.session.url;
   } catch (err) {
-    console.log(err);
     alert(err.message);
   }
 };

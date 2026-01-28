@@ -5,6 +5,7 @@ const bookingRoute = require('./routes/bookingRoute');
 const viewRoute = require('./routes/viewRoute');
 const rateLimit = require('express-rate-limit');
 const mongoSanitize = require('express-mongo-sanitize');
+const compression = require('compression');
 const path = require('path');
 const xss = require('xss-clean');
 const cookieParser = require('cookie-parser');
@@ -32,6 +33,7 @@ app.use(
     ],
   }),
 );
+app.use(compression());
 app.use(mongoSanitize());
 app.use(xss());
 app.use(express.static(`${__dirname}/public`));
@@ -42,10 +44,6 @@ const limiter = rateLimit({
 });
 app.use('/api', limiter);
 if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
-app.use('/api/v1/tours', (req, res, next) => {
-  console.log('hello from middleWare');
-  next();
-});
 app.use('/api/v1/tours', tourRoute);
 app.use('/api/v1/users', userRoute);
 app.use('/api/v1/reviews', reviewRoute);
